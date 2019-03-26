@@ -12,7 +12,7 @@ export default function Todos({ initialTodos = [] }: TodosProps) {
       todos: initialTodos,
       filter: 'all',
     },
-    transitions,
+    methods,
   );
 
   const visibleTodos = useMemo(() => {
@@ -96,7 +96,7 @@ interface TodoItem {
 type VisibilityFilter = 'all' | 'completed' | 'active';
 const visibilityFilters: VisibilityFilter[] = ['all', 'completed', 'active'];
 
-const transitions = (state: TodosState) => ({
+const methods = (state: TodosState) => ({
   addTodo(text: string) {
     state.todos.push({
       id: state.nextId++,

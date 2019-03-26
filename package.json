@@ -1,7 +1,7 @@
 {
   "name": "use-state-methods",
   "version": "0.0.0",
-  "description": "All the power and none of the pain of useReducer",
+  "description": "A simpler way to useReducers",
   "keywords": [],
   "main": "dist/index.js",
   "module": "dist/index.es5.js",

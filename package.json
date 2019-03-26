@@ -12,7 +12,7 @@
   "author": "Tom Crockett <pelotom@gmail.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/pelotom/use-state-methods"
   },
   "license": "MIT",
   "engines": {

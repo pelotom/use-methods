@@ -6626,7 +6626,7 @@ react-testing-library@^6.0.2:
 
 react@^16.8.5:
   version "16.8.5"
-  resolved "https://registry.npmjs.org/react/-/react-16.8.5.tgz#49be3b655489d74504ad994016407e8a0445de66"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.5.tgz#49be3b655489d74504ad994016407e8a0445de66"
   integrity sha512-daCb9TD6FZGvJ3sg8da1tRAtIuw29PbKZW++NN4wqkbEvxL+bZpaaYb4xuftW/SpXmgacf1skXl/ddX6CdOlDw==
   dependencies:
     loose-envify "^1.1.0"
@@ -7130,9 +7130,9 @@ scheduler@^0.13.5:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-semantic-release@^15.9.16:
+semantic-release@^15.13.3:
   version "15.13.3"
-  resolved "https://registry.npmjs.org/semantic-release/-/semantic-release-15.13.3.tgz#412720b9c09f39f04df67478fa409a914107e05b"
+  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-15.13.3.tgz#412720b9c09f39f04df67478fa409a914107e05b"
   integrity sha512-cax0xPPTtsxHlrty2HxhPql2TTvS74Ni2O8BzwFHxNY/mviVKEhI4OxHzBYJkpVxx1fMVj36+oH7IlP+SJtPNA==
   dependencies:
     "@semantic-release/commit-analyzer" "^6.1.0"

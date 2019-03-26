@@ -1,5 +1,5 @@
 import useStateMethods from '../src';
-import * as React from 'react';
+import React from 'react';
 import { cleanup, render, fireEvent, RenderResult } from 'react-testing-library';
 import Todos from './Todos';
 

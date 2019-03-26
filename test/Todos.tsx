@@ -1,5 +1,5 @@
 import useStateMethods from '../src';
-import * as React from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 
 interface TodosProps {
   initialTodos?: TodoItem[];
@@ -15,7 +15,7 @@ export default function Todos({ initialTodos = [] }: TodosProps) {
     transitions,
   );
 
-  const visibleTodos = React.useMemo(() => {
+  const visibleTodos = useMemo(() => {
     switch (filter) {
       case 'all':
         return todos;
@@ -26,11 +26,11 @@ export default function Todos({ initialTodos = [] }: TodosProps) {
     }
   }, [todos, filter]);
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // track how many times methods change (should never be more than zero)
-  const methodChanges = React.useRef(-1);
-  React.useEffect(() => {
+  const methodChanges = useRef(-1);
+  useEffect(() => {
     methodChanges.current++;
   }, [addTodo, toggleTodo, setFilter]);
 

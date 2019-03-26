@@ -4,11 +4,7 @@ cache:
     - ~/.npm
 notifications:
   email: false
-node_js:
-  - '10'
-  - '11'
-  - '8'
-  - '6'
+node_js: 'node'
 script:
   - npm run test:prod && npm run build
 after_success:

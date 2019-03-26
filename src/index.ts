@@ -2,44 +2,44 @@ import { useCallback, useMemo } from 'react';
 import { useImmerReducer } from 'use-immer';
 import { Draft } from 'immer';
 
-export type Transitions<
+export type Methods<
   S extends object = any,
   R extends Record<string, (...args: any[]) => S | void> = any
 > = (s: S) => R;
 
-export type StateFor<T extends Transitions> = T extends Transitions<infer S> ? S : never;
+export type StateFor<M extends Methods> = M extends Methods<infer S> ? S : never;
 
-export type ActionUnionFor<T extends Transitions> = T extends Transitions<any, infer R>
+export type ActionUnionFor<M extends Methods> = M extends Methods<any, infer R>
   ? { [T in keyof R]: { type: T; payload: Parameters<R[T]> } }[keyof R]
   : never;
 
-export type CallbacksFor<T extends Transitions> = {
-  [K in ActionUnionFor<T>['type']]: (
-    ...payload: ActionByType<ActionUnionFor<T>, K>['payload']
+export type CallbacksFor<M extends Methods> = {
+  [T in ActionUnionFor<M>['type']]: (
+    ...payload: ActionByType<ActionUnionFor<M>, T>['payload']
   ) => void
 };
 
 export type ActionByType<A, K> = A extends { type: infer K2 } ? (K extends K2 ? A : never) : never;
 
-export default function useStateMethods<T extends Transitions>(
-  initialState: StateFor<T>,
-  transitions: T,
-): StateFor<T> & CallbacksFor<T> {
+export default function useStateMethods<M extends Methods>(
+  initialState: StateFor<M>,
+  methods: M,
+): StateFor<M> & CallbacksFor<M> {
   const reducer = useCallback(
-    (state: Draft<StateFor<T>>, action: ActionUnionFor<T>) =>
-      transitions(state)[action.type](...action.payload),
-    [transitions],
+    (state: Draft<StateFor<M>>, action: ActionUnionFor<M>) =>
+      methods(state)[action.type](...action.payload),
+    [methods],
   );
   const [state, dispatch] = useImmerReducer(reducer, initialState);
-  const actionTypes: ActionUnionFor<T>['type'][] = Object.keys(transitions(initialState));
+  const actionTypes: ActionUnionFor<M>['type'][] = Object.keys(methods(initialState));
   const callbacks = useMemo(
     () =>
       actionTypes.reduce(
         (accum, type) => {
-          accum[type] = (...payload) => dispatch({ type, payload } as ActionUnionFor<T>);
+          accum[type] = (...payload) => dispatch({ type, payload } as ActionUnionFor<M>);
           return accum;
         },
-        {} as CallbacksFor<T>,
+        {} as CallbacksFor<M>,
       ),
     actionTypes,
   );

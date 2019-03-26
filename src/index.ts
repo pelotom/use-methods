@@ -21,10 +21,12 @@ export type CallbacksFor<M extends Methods> = {
 
 export type ActionByType<A, K> = A extends { type: infer K2 } ? (K extends K2 ? A : never) : never;
 
+export type StateAndCallbacksFor<M extends Methods> = StateFor<M> & CallbacksFor<M>;
+
 export default function useStateMethods<M extends Methods>(
   initialState: StateFor<M>,
   methods: M,
-): StateFor<M> & CallbacksFor<M> {
+): StateAndCallbacksFor<M> {
   const reducer = useCallback(
     (state: Draft<StateFor<M>>, action: ActionUnionFor<M>) =>
       methods(state)[action.type](...action.payload),

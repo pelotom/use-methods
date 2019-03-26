@@ -1,6 +1,6 @@
 # `use-state-methods` [![Build Status](https://travis-ci.com/pelotom/use-state-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-state-methods)
 
-This library exports a single React hook, `useStateMethods`, which has all the power of `useReducer` but with a more straightforward API. Instead of providing a single "reducer" function which is one giant switch statement, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
+This library exports a single React hook, `useStateMethods`, which has all the power of `useReducer` with none of the ceremony of actions. Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
 
 ## Example
 

@@ -51,18 +51,14 @@ Like the `dispatch` method returned from `useReducer`, the callbacks returned fr
 
 ## Types
 
-This library is built in TypeScript, and for TypeScript users it offers an additional benefit: one no longer needs to declare action types. The example above, if we were to write it in TypeScript with `useReducer`, would require the declaration of `State` and `Action` types:
+This library is built in TypeScript, and for TypeScript users it offers an additional benefit: one no longer needs to declare action types. The example above, if we were to write it in TypeScript with `useReducer`, would require the declaration of an `Action` type:
 
 ```ts
-interface State {
-  count: number;
-}
-
 type Action =
   | { type: 'reset' }
   | { type: 'increment' }
   | { type: 'decrement' };
 ```
 
-With `useStateMethods` the "actions" are implicitly derived from your methods, so you don't need to maintain this extra type artifacts.
+With `useStateMethods` the "actions" are implicitly derived from your methods, so you don't need to maintain this extra type artifact.
  

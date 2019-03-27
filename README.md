@@ -9,12 +9,10 @@ import useMethods from 'use-methods';
 
 function Counter() {
 
-  const {
-   count,
-   reset,
-   increment,
-   decrement
-  } = useMethods(initialState, methods);
+  const [
+    { count }, // <- your state
+    { reset, increment, decrement }, // <- callbacks for modifying state
+  ] = useMethods(initialState, methods);
 
   return (
     <>

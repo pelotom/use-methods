@@ -2,7 +2,7 @@ import { Draft } from 'immer';
 import { useCallback, useMemo } from 'react';
 import { useImmerReducer } from 'use-immer';
 
-export type StateAndCallbacksFor<M extends Methods> = StateFor<M> & CallbacksFor<M>;
+export type StateAndCallbacksFor<M extends Methods> = [StateFor<M>, CallbacksFor<M>];
 
 export type StateFor<M extends Methods> = M extends Methods<infer S, any> ? S : never;
 
@@ -46,5 +46,5 @@ export default function useMethods<S extends object, R extends MethodRecordBase<
       ),
     actionTypes,
   );
-  return { ...state, ...callbacks };
+  return [state, callbacks];
 }

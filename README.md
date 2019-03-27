@@ -20,7 +20,7 @@ const [state, callbacks] = useMethods(methods, initialState);
 
 Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
 
-## Example
+A full example:
 
 ```js
 import useMethods from 'use-methods';

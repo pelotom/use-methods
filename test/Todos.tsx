@@ -6,14 +6,12 @@ interface TodosProps {
 }
 
 export default function Todos({ initialTodos = [] }: TodosProps) {
-  const [{ todos, filter }, { addTodo, toggleTodo, setFilter }] = useMethods(
-    {
-      nextId: initialTodos.reduce((maxId, nextItem) => Math.max(maxId, nextItem.id), 0) + 1,
-      todos: initialTodos,
-      filter: 'all',
-    },
-    methods,
-  );
+  const initialState: TodosState = {
+    nextId: initialTodos.reduce((maxId, nextItem) => Math.max(maxId, nextItem.id), 0) + 1,
+    todos: initialTodos,
+    filter: 'all',
+  };
+  const [{ todos, filter }, { addTodo, toggleTodo, setFilter }] = useMethods(methods, initialState);
 
   const visibleTodos = useMemo(() => {
     switch (filter) {

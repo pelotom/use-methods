@@ -25,8 +25,8 @@ export type ActionUnion<R extends MethodRecordBase> = {
 export type ActionByType<A, T> = A extends { type: infer T2 } ? (T extends T2 ? A : never) : never;
 
 export default function useMethods<S extends object, R extends MethodRecordBase<S>>(
-  initialState: S,
   methods: Methods<S, R>,
+  initialState: S,
 ): StateAndCallbacksFor<typeof methods> {
   const reducer = useCallback(
     (state: Draft<S>, action: ActionUnion<R>) =>

@@ -12,7 +12,7 @@ function Counter() {
   const [
     { count }, // <- your state
     { reset, increment, decrement }, // <- callbacks for modifying state
-  ] = useMethods(initialState, methods);
+  ] = useMethods(methods, initialState);
 
   return (
     <>

@@ -12,7 +12,7 @@ Pick your poison:
 
 ## Usage
 
-This library exports a single [React hook](https://reactjs.org/docs/hooks-intro.html), `useMethods`, which has all the power of `useReducer` but none of the ceremony that comes with actions and dispatchers. The basic API follows a similar pattern to `useReducer`:
+This library exports a single [React Hook](https://reactjs.org/docs/hooks-intro.html), `useMethods`, which has all the power of `useReducer` but none of the ceremony that comes with actions and dispatchers. The basic API follows a similar pattern to `useReducer`:
 
 ```js
 const [state, callbacks] = useMethods(methods, initialState);

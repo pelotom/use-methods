@@ -1,6 +1,6 @@
 {
   "name": "use-methods",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "A simpler way to useReducers",
   "keywords": [],
   "main": "dist/index.js",

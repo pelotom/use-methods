@@ -1,5 +1,15 @@
 # `use-methods` [![Build Status](https://travis-ci.com/pelotom/use-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-methods)
 
+## Installation
+
+Pick your poison:
+- ```
+  npm install --save-dev use-methods
+  ```
+- ```
+  yarn add --dev use-methods
+  ```
+
 ## Usage
 
 The basic API follows a similar pattern to `useReducer`:

@@ -2,7 +2,13 @@
   "name": "use-methods",
   "version": "0.4.2",
   "description": "A simpler way to useReducers",
-  "keywords": [],
+  "keywords": [
+    "react",
+    "hooks",
+    "useReducer",
+    "immer",
+    "state management"
+  ],
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [

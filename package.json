@@ -1,6 +1,6 @@
 {
   "name": "use-state-methods",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A simpler way to useReducers",
   "keywords": [],
   "main": "dist/index.js",

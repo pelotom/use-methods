@@ -1,4 +1,4 @@
-import useStateMethods from '../src';
+import useMethods from '../src';
 import React, { useMemo, useRef, useEffect } from 'react';
 
 interface TodosProps {
@@ -6,7 +6,7 @@ interface TodosProps {
 }
 
 export default function Todos({ initialTodos = [] }: TodosProps) {
-  const { todos, filter, addTodo, toggleTodo, setFilter } = useStateMethods(
+  const { todos, filter, addTodo, toggleTodo, setFilter } = useMethods(
     {
       nextId: initialTodos.reduce((maxId, nextItem) => Math.max(maxId, nextItem.id), 0) + 1,
       todos: initialTodos,

@@ -1,5 +1,5 @@
 {
-  "name": "use-state-methods",
+  "name": "use-methods",
   "version": "0.2.3",
   "description": "A simpler way to useReducers",
   "keywords": [],
@@ -11,7 +11,7 @@
   "author": "Tom Crockett <pelotom@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pelotom/use-state-methods"
+    "url": "https://github.com/pelotom/use-methods"
   },
   "license": "MIT",
   "engines": {

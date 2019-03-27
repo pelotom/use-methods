@@ -1,11 +1,11 @@
-# `use-state-methods` [![Build Status](https://travis-ci.com/pelotom/use-state-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-state-methods)
+# `use-methods` [![Build Status](https://travis-ci.com/pelotom/use-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-methods)
 
-This library exports a single React hook, `useStateMethods`, which has all the power of `useReducer` with none of the ceremony of actions. Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
+This library exports a single React hook, `useMethods`, which has all the power of `useReducer` with none of the ceremony of actions. Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
 
 ## Example
 
 ```js
-import useStateMethods from 'use-state-methods';
+import useMethods from 'use-methods';
 
 function Counter() {
 
@@ -14,7 +14,7 @@ function Counter() {
    reset,
    increment,
    decrement
-  } = useStateMethods(initialState, methods);
+  } = useMethods(initialState, methods);
 
   return (
     <>
@@ -43,11 +43,11 @@ const methods = state => ({
 
 ## Immutability
 
-`use-state-methods` is built on [`immer`](https://github.com/mweststrate/immer), which allows you to write your methods in an imperative, mutating style, even though the actual state managed behind the scenes is immutable. You can also return entirely new states from your methods where it's more convenient to do so (as in the `reset` example above).
+`use-methods` is built on [`immer`](https://github.com/mweststrate/immer), which allows you to write your methods in an imperative, mutating style, even though the actual state managed behind the scenes is immutable. You can also return entirely new states from your methods where it's more convenient to do so (as in the `reset` example above).
 
 ## Memoization
 
-Like the `dispatch` method returned from `useReducer`, the callbacks returned from `useStateMethods` aren't recreated on each render, so they will not be the cause of needless re-rendering if passed as bare props to `React.memo`ized subcomponents. Save your `useCallback`s for functions that don't map exactly to an existing callback!
+Like the `dispatch` method returned from `useReducer`, the callbacks returned from `useMethods` aren't recreated on each render, so they will not be the cause of needless re-rendering if passed as bare props to `React.memo`ized subcomponents. Save your `useCallback`s for functions that don't map exactly to an existing callback!
 
 ## Types
 
@@ -60,9 +60,9 @@ type Action =
   | { type: 'decrement' };
 ```
 
-With `useStateMethods` the "actions" are implicitly derived from your methods, so you don't need to maintain this extra type artifact.
+With `useMethods` the "actions" are implicitly derived from your methods, so you don't need to maintain this extra type artifact.
 
-If you need to obtain the type of the resulting state + callbacks object that will come back from `useStateMethods`, use the `StateAndCallbacksFor` operator, e.g.:
+If you need to obtain the type of the resulting state + callbacks object that will come back from `useMethods`, use the `StateAndCallbacksFor` operator, e.g.:
 
 ```ts
 const MyContext = React.createContext<StateAndCallbacksFor<typeof methods> | null>(null);

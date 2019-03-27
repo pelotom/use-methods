@@ -1,6 +1,14 @@
 # `use-methods` [![Build Status](https://travis-ci.com/pelotom/use-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-methods)
 
-This library exports a single React hook, `useMethods`, which has all the power of `useReducer` with none of the ceremony of actions. Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
+## Usage
+
+The basic API follows a similar pattern to `useReducer`:
+
+```js
+const [state, callbacks] = useMethods(methods, initialState);
+```
+
+This library exports a single React hook, `useMethods`, which has all the power of `useReducer` but none of the ceremony that comes with actions and dispatchers. Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
 
 ## Example
 
@@ -10,7 +18,7 @@ import useMethods from 'use-methods';
 function Counter() {
 
   const [
-    { count }, // <- your state
+    { count }, // <- latest state
     { reset, increment, decrement }, // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 

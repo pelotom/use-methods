@@ -20,7 +20,7 @@ This library exports a single [React Hook](https://reactjs.org/docs/hooks-intro.
 const [state, callbacks] = useMethods(methods, initialState);
 ```
 
-Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back is not a single `dispatch` function but a set of callbacks corresponding to your methods.
+Instead of providing a single "reducer" function which is one giant switch statement over an action type, you provide a set of "methods" which modify the state or return new states. Likewise, what you get back in addition to the latest state is not a single `dispatch` function but a set of callbacks corresponding to your methods.
 
 A full example:
 

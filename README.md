@@ -4,10 +4,10 @@
 
 Pick your poison:
 - ```
-  npm install --save-dev use-methods
+  npm install use-methods
   ```
 - ```
-  yarn add --dev use-methods
+  yarn add use-methods
   ```
 
 ## Usage

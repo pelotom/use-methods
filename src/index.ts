@@ -14,9 +14,9 @@ export type CallbacksFor<M extends Methods> = M extends Methods<any, infer R>
     }
   : never;
 
-export type Methods<S extends object = any, R extends MethodRecordBase<S> = any> = (state: S) => R;
+export type Methods<S = any, R extends MethodRecordBase<S> = any> = (state: S) => R;
 
-export type MethodRecordBase<S extends object = any> = Record<string, (...args: any[]) => S | void>;
+export type MethodRecordBase<S = any> = Record<string, (...args: any[]) => S | void>;
 
 export type ActionUnion<R extends MethodRecordBase> = {
   [T in keyof R]: { type: T; payload: Parameters<R[T]> }
@@ -24,7 +24,7 @@ export type ActionUnion<R extends MethodRecordBase> = {
 
 export type ActionByType<A, T> = A extends { type: infer T2 } ? (T extends T2 ? A : never) : never;
 
-export default function useMethods<S extends object, R extends MethodRecordBase<S>>(
+export default function useMethods<S, R extends MethodRecordBase<S>>(
   methods: Methods<S, R>,
   initialState: S,
 ): StateAndCallbacksFor<typeof methods> {

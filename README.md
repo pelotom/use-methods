@@ -1,5 +1,7 @@
 # `use-methods` [![Build Status](https://travis-ci.com/pelotom/use-methods.svg?branch=master)](https://travis-ci.com/pelotom/use-methods)
 
+<img src="https://i.imgur.com/2GzRGBU.png" width="350">
+
 ## Installation
 
 Pick your poison:

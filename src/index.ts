@@ -16,7 +16,10 @@ export type CallbacksFor<M extends Methods> = M extends Methods<any, infer R>
 
 export type Methods<S = any, R extends MethodRecordBase<S> = any> = (state: S) => R;
 
-export type MethodRecordBase<S = any> = Record<string, (...args: any[]) => S | void>;
+export type MethodRecordBase<S = any> = Record<
+  string,
+  (...args: any[]) => S extends object ? S | void : S
+>;
 
 export type ActionUnion<R extends MethodRecordBase> = {
   [T in keyof R]: { type: T; payload: Parameters<R[T]> }

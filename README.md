@@ -61,4 +61,9 @@ type Action =
 ```
 
 With `useStateMethods` the "actions" are implicitly derived from your methods, so you don't need to maintain this extra type artifact.
- 
+
+If you need to obtain the type of the resulting state + callbacks object that will come back from `useStateMethods`, use the `StateAndCallbacksFor` operator, e.g.:
+
+```ts
+const MyContext = React.createContext<StateAndCallbacksFor<typeof methods> | null>(null);
+```

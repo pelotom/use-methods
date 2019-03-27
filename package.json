@@ -1,6 +1,6 @@
 {
   "name": "use-methods",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A simpler way to useReducers",
   "keywords": [
     "react",

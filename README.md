@@ -59,6 +59,8 @@ const methods = state => ({
 });
 ```
 
+### Comparison to `useReducer`
+
 [Here's a more complex example](https://codesandbox.io/s/2109324q3r) involving a list of counters, implemented using `useReducer` and `useMethods` respectively:
 
 ![useReducer vs useMethods comparison](https://i.imgur.com/CayVD72.png)

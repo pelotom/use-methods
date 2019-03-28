@@ -59,6 +59,10 @@ const methods = state => ({
 });
 ```
 
+[Here's a more complex example](https://codesandbox.io/s/2109324q3r) involving a list of counters, implemented using `useReducer` and `useMethods` respectively. Which of these would you wrather write?
+
+![useReducer vs useMethods comparison](https://i.imgur.com/CayVD72.png)
+
 ## Immutability
 
 `use-methods` is built on [`immer`](https://github.com/mweststrate/immer), which allows you to write your methods in an imperative, mutating style, even though the actual state managed behind the scenes is immutable. You can also return entirely new states from your methods where it's more convenient to do so (as in the `reset` example above).

@@ -59,7 +59,7 @@ const methods = state => ({
 });
 ```
 
-[Here's a more complex example](https://codesandbox.io/s/2109324q3r) involving a list of counters, implemented using `useReducer` and `useMethods` respectively. Which of these would you wrather write?
+[Here's a more complex example](https://codesandbox.io/s/2109324q3r) involving a list of counters, implemented using `useReducer` and `useMethods` respectively. Which of these would you rather write?
 
 ![useReducer vs useMethods comparison](https://i.imgur.com/CayVD72.png)
 

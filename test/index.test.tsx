@@ -1,7 +1,8 @@
 import useMethods from '../src';
-import React from 'react';
+import React, { useLayoutEffect, useReducer, useMemo } from 'react';
 import { cleanup, render, fireEvent, RenderResult } from 'react-testing-library';
 import Todos from './Todos';
+import produce from 'immer';
 
 afterEach(cleanup);
 
@@ -82,4 +83,40 @@ describe('todos example', () => {
   function getStatus(item: HTMLElement) {
     return item.classList.value;
   }
+});
+
+it('avoids invoking methods more than necessary', () => {
+  const buttonText = 'click me!';
+
+  let invocations = 0;
+
+  function Test() {
+    const { increment } = useMethods(methods, { count: 0 })[1];
+    return <button onClick={increment}>{buttonText}</button>;
+  }
+
+  interface State {
+    count: number;
+  }
+
+  const initialState: State = { count: 0 };
+
+  const methods = (state: State) => ({
+    increment() {
+      invocations++;
+      state.count++;
+    },
+  });
+
+  const button = render(<Test />).getByText(buttonText);
+
+  expect(invocations).toBe(0);
+
+  fireEvent.click(button);
+
+  expect(invocations).toBe(1);
+
+  fireEvent.click(button);
+
+  expect(invocations).toBe(2);
 });

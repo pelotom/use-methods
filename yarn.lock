@@ -3703,10 +3703,10 @@ ignore@^4.0.3:
   resolved "https://registry.npmjs.org/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
-immer@^1.7.3:
-  version "1.12.1"
-  resolved "https://registry.npmjs.org/immer/-/immer-1.12.1.tgz#40c6e5b292c00560836c2993bda3a24379d466f5"
-  integrity sha512-3fmKM6ovaqDt0CdC9daXpNi5x/YCYS3i4cwLdTVkhJdk5jrDXoPs7lCm3IqM3yhfSnz4tjjxbRG2CziQ7m8ztg==
+immer@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.npmjs.org/immer/-/immer-2.1.4.tgz#92545e07c2c28b94afe0752364a35f5693b6ffaa"
+  integrity sha512-6UPbG/DIXFSWp10oJJaCPl5/lp5GhGEscDH0QGYKc5EMT5PLZ9+L8hhyc44zRHksI7CQXJp8r6nlDR3n09X6SA==
 
 import-fresh@^2.0.0:
   version "2.0.0"
@@ -8220,13 +8220,6 @@ url-template@^2.0.8:
   version "2.0.8"
   resolved "https://registry.npmjs.org/url-template/-/url-template-2.0.8.tgz#fc565a3cccbff7730c775f5641f9555791439f21"
   integrity sha1-/FZaPMy/93MMd19WQflVV5FDnyE=
-
-use-immer@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/use-immer/-/use-immer-0.1.0.tgz#58b2f861f539faa9fdc8e695cda9202e0c8f1997"
-  integrity sha512-zn/C8S4qB62dKILDq7+BLPYX9I3iAbkqJjTXOi1V1AmM7Elr/0BlOycNKkcKlC/bv6KqPsxE8cN3YM8cQ9/rIg==
-  dependencies:
-    immer "^1.7.3"
 
 use@^3.1.0:
   version "3.1.1"

@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "@types/react": "^16.8.8",
-    "use-immer": "^0.1.0"
+    "immer": "^2.1.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",

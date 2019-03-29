@@ -1,6 +1,5 @@
-import { Draft } from 'immer';
-import { useCallback, useMemo } from 'react';
-import { useImmerReducer } from 'use-immer';
+import produce from 'immer';
+import { Reducer, useMemo, useReducer } from 'react';
 
 export type StateAndCallbacksFor<M extends Methods> = [StateFor<M>, CallbacksFor<M>];
 
@@ -31,12 +30,14 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
   methods: Methods<S, R>,
   initialState: S,
 ): StateAndCallbacksFor<typeof methods> {
-  const reducer = useCallback(
-    (state: Draft<S>, action: ActionUnion<R>) =>
-      methods(state as S)[action.type](...action.payload),
+  const reducer = useMemo<Reducer<S, ActionUnion<R>>>(
+    () =>
+      (produce as any)((state: S, action: ActionUnion<R>) =>
+        methods(state)[action.type](...action.payload),
+      ),
     [methods],
   );
-  const [state, dispatch] = useImmerReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const actionTypes: ActionUnion<R>['type'][] = Object.keys(methods(initialState));
   const callbacks = useMemo(
     () =>

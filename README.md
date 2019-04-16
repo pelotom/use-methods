@@ -73,19 +73,19 @@ _Which of these would you rather write?_
 
 ## Memoization
 
-Like the `dispatch` method returned from `useReducer`, the callbacks returned from `useMethods` aren't recreated on each render, so they will not be the cause of needless re-rendering if passed as bare props to `React.memo`ized subcomponents. Save your `useCallback`s for functions that don't map exactly to an existing callback! Also, the whole `callbacks` object is also memoized (as in `[state, callbacks]`), so you can safely add this to your deps array as well, and there's no need to pass individual methods
+Like the `dispatch` method returned from `useReducer`, the callbacks returned from `useMethods` aren't recreated on each render, so they will not be the cause of needless re-rendering if passed as bare props to `React.memo`ized subcomponents. Save your `useCallback`s for functions that don't map exactly to an existing callback! In fact, the entire `callbacks` object (as in `[state, callbacks]`) is memoized, so you can use this to your deps array as well:
 
 ```ts
 const [state, callbacks] = useMethods(methods, initialState);
 
-// can pass to event handlers props, useEffect, etc
-const MyStableCallback = useCallback((times: number) => {  
-  return callbacks.someMethod('a', times);
+// can pass to event handlers props, useEffect, etc:
+const MyStableCallback = useCallback((x: number) => {  
+  callbacks.someMethod('foo', x);
 }, [callbacks]);
 
-// they are equivalent
-const MyOtherStableCallback = useCallback((times: number) => {
-  return callbacks.someMethod('a', times);
+// which is equivalent to:
+const MyOtherStableCallback = useCallback((x: number) => {
+  callbacks.someMethod('foo', x);
 }, [callbacks.someMethod]);
 ```
 

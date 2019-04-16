@@ -120,3 +120,74 @@ it('avoids invoking methods more than necessary', () => {
 
   expect(invocations).toBe(2);
 });
+
+it('allows lazy initialization', () => {
+  // Adapted from https://reactjs.org/docs/hooks-reference.html#lazy-initialization
+
+  interface State {
+    count: number;
+  }
+
+  const init = (count: number): State => ({ count });
+
+  const methods = (state: State) => ({
+    increment() {
+      state.count++;
+    },
+    decrement() {
+      state.count--;
+    },
+    reset(newCount: number) {
+      return init(newCount);
+    },
+  });
+
+  interface CounterProps {
+    initialCount: number;
+  }
+
+  const testId = 'counter-testid';
+
+  function Counter({ initialCount }: CounterProps) {
+    const [state, { increment, decrement, reset }] = useMethods(methods, initialCount, init);
+    return (
+      <>
+        Count: <span data-testid={testId}>{state.count}</span>
+        <button onClick={increment}>+</button>
+        <button onClick={decrement}>-</button>
+        <button onClick={() => reset(initialCount)}>Reset</button>
+      </>
+    );
+  }
+
+  const $ = render(<Counter initialCount={0} />);
+
+  const expectCount = (count: number) =>
+    expect(Number.parseInt($.getByTestId(testId).textContent!, 10)).toBe(count);
+
+  expectCount(0);
+
+  fireEvent.click($.getByText('+'));
+
+  expectCount(1);
+
+  fireEvent.click($.getByText('+'));
+
+  expectCount(2);
+
+  fireEvent.click($.getByText(/reset/i));
+
+  expectCount(0);
+
+  fireEvent.click($.getByText('-'));
+
+  expectCount(-1);
+
+  $.rerender(<Counter initialCount={3} />);
+
+  expectCount(-1);
+
+  fireEvent.click($.getByText(/reset/i));
+
+  expectCount(3);
+});

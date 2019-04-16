@@ -35,7 +35,7 @@ export default function useMethods<S, R extends MethodRecordBase<S>, I>(
   initializerArg: I,
   initializer: (arg: I) => S,
 ): StateAndCallbacksFor<typeof methods>;
-export default function useMethods<S, R extends MethodRecordBase<S>, I = S>(
+export default function useMethods<S, R extends MethodRecordBase<S>>(
   methods: Methods<S, R>,
   initialState: any,
   initializer?: any,

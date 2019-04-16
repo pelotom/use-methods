@@ -29,17 +29,17 @@ export type ActionByType<A, T> = A extends { type: infer T2 } ? (T extends T2 ? 
 export default function useMethods<S, R extends MethodRecordBase<S>>(
   methods: Methods<S, R>,
   initialState: S,
-): StateAndCallbacksFor<typeof methods>;
+): StateAndCallbacksFor<Methods<S, R>>;
 export default function useMethods<S, R extends MethodRecordBase<S>, I>(
   methods: Methods<S, R>,
   initializerArg: I,
   initializer: (arg: I) => S,
-): StateAndCallbacksFor<typeof methods>;
+): StateAndCallbacksFor<Methods<S, R>>;
 export default function useMethods<S, R extends MethodRecordBase<S>>(
   methods: Methods<S, R>,
   initialState: any,
   initializer?: any,
-): StateAndCallbacksFor<typeof methods> {
+): StateAndCallbacksFor<Methods<S, R>> {
   const reducer = useMemo<Reducer<S, ActionUnion<R>>>(
     () =>
       (produce as any)((state: S, action: ActionUnion<R>) =>

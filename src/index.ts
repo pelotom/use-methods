@@ -1,4 +1,4 @@
-import produce from 'immer';
+import produce, { PatchListener } from 'immer';
 import { Reducer, useMemo, useReducer } from 'react';
 
 export type StateAndCallbacksFor<M extends Methods> = [StateFor<M>, CallbacksFor<M>];
@@ -20,6 +20,17 @@ export type MethodRecordBase<S = any> = Record<
   (...args: any[]) => S extends object ? S | void : S
 >;
 
+export const MethodsSymbol = {
+  patch: Symbol('patch'),
+};
+
+export function addPatchCallback<S = any, R extends MethodRecordBase<S> = any>(
+  methods: Methods<S, R>,
+  callback: PatchListener,
+): void {
+  (methods as any)[MethodsSymbol.patch] = callback;
+}
+
 export type ActionUnion<R extends MethodRecordBase> = {
   [T in keyof R]: { type: T; payload: Parameters<R[T]> }
 }[keyof R];
@@ -40,13 +51,18 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
   initialState: any,
   initializer?: any,
 ): StateAndCallbacksFor<Methods<S, R>> {
-  const reducer = useMemo<Reducer<S, ActionUnion<R>>>(
-    () =>
-      (produce as any)((state: S, action: ActionUnion<R>) =>
-        methods(state)[action.type](...action.payload),
-      ),
-    [methods],
-  );
+  const reducer = useMemo<Reducer<S, ActionUnion<R>>>(() => {
+    const patchMethod = (methods as any)[MethodsSymbol.patch] as PatchListener;
+    return (state: S, action: ActionUnion<R>) => {
+      return (produce as any)(
+        state,
+        (draft: S) => {
+          return methods(draft)[action.type](...action.payload);
+        },
+        patchMethod,
+      );
+    };
+  }, [methods]);
   const [state, dispatch] = useReducer(reducer, initialState, initializer);
   const actionTypes: ActionUnion<R>['type'][] = Object.keys(methods(state));
   const callbacks = useMemo(

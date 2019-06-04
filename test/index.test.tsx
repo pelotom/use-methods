@@ -1,8 +1,8 @@
-import useMethods, {addPatchCallback} from '../src';
+import useMethods from '../src';
 import React, { useLayoutEffect, useReducer, useMemo } from 'react';
 import { cleanup, render, fireEvent, RenderResult } from 'react-testing-library';
 import Todos from './Todos';
-import produce from 'immer';
+import { Patch } from 'immer';
 
 afterEach(cleanup);
 
@@ -205,23 +205,25 @@ it('will provide patches', () => {
   const patchList: any[] = [];
   const inverseList: any[] = [];
 
-  const methods = (state: State) => ({
-    increment() {
-      state.count++;
-    },
-    decrement() {
-      state.count--;
+  const methodsObject = {
+    methods: (state: State) => ({
+      increment() {
+        state.count++;
+      },
+      decrement() {
+        state.count--;
+      }
+    }),
+    patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
+      patchList.push(...patches);
+      inverseList.push(...inversePatches);
     }
-  });
-  addPatchCallback(methods, (patches, inversePatches) => {
-    patchList.push(...patches);
-    inverseList.push(...inversePatches);
-  });
+  };
 
   const testId = 'counter-testid';
 
   function Counter() {
-    const [state, { increment, decrement }] = useMethods(methods, initialState);
+    const [state, { increment, decrement }] = useMethods(methodsObject, initialState);
     return (
       <>
         Count: <span data-testid={testId}>{state.count}</span>

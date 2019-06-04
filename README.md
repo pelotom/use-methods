@@ -71,6 +71,33 @@ _Which of these would you rather write?_
 
 `use-methods` is built on [`immer`](https://github.com/mweststrate/immer), which allows you to write your methods in an imperative, mutating style, even though the actual state managed behind the scenes is immutable. You can also return entirely new states from your methods where it's more convenient to do so (as in the `reset` example above).
 
+If you would like to use the [patches](https://github.com/immerjs/immer#patches) functionality from immer,
+you can pass an object to `useMethods` that contains the `methods` property and a `patchCallback`
+property.  The callback will be fed the patches applied to the state. For example: 
+
+```ts
+const patchList: any[] = [];
+const inverseList: any[] = [];
+
+const methodsObject = {
+  methods: (state: State) => ({
+    increment() {
+      state.count++;
+    },
+    decrement() {
+      state.count--;
+    }
+  }),
+  patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
+    patchList.push(...patches);
+    inverseList.push(...inversePatches);
+  }
+};
+
+// ... and in the component
+const [state, { increment, decrement }] = useMethods(methodsObject, initialState);
+```
+
 ## Memoization
 
 Like the `dispatch` method returned from `useReducer`, the callbacks returned from `useMethods` aren't recreated on each render, so they will not be the cause of needless re-rendering if passed as bare props to `React.memo`ized subcomponents. Save your `useCallback`s for functions that don't map exactly to an existing callback! In fact, the entire `callbacks` object (as in `[state, callbacks]`) is memoized, so you can use this to your deps array as well:

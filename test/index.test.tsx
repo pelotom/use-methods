@@ -2,7 +2,7 @@ import useMethods from '../src';
 import React, { useLayoutEffect, useReducer, useMemo } from 'react';
 import { cleanup, render, fireEvent, RenderResult } from 'react-testing-library';
 import Todos from './Todos';
-import produce from 'immer';
+import { Patch } from 'immer';
 
 afterEach(cleanup);
 
@@ -190,4 +190,72 @@ it('allows lazy initialization', () => {
   fireEvent.click($.getByText(/reset/i));
 
   expectCount(3);
+});
+
+it('will provide patches', () => {
+
+  interface State {
+    count: number;
+  }
+
+  const initialState: State = {
+    count: 0
+  };
+
+  const patchList: any[] = [];
+  const inverseList: any[] = [];
+
+  const methodsObject = {
+    methods: (state: State) => ({
+      increment() {
+        state.count++;
+      },
+      decrement() {
+        state.count--;
+      }
+    }),
+    patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
+      patchList.push(...patches);
+      inverseList.push(...inversePatches);
+    }
+  };
+
+  const testId = 'counter-testid';
+
+  function Counter() {
+    const [state, { increment, decrement }] = useMethods(methodsObject, initialState);
+    return (
+      <>
+        Count: <span data-testid={testId}>{state.count}</span>
+        <button onClick={increment}>+</button>
+        <button onClick={decrement}>-</button>
+      </>
+    );
+  }
+
+  const $ = render(<Counter />);
+
+  expect(patchList).toEqual([]);
+  expect(inverseList).toEqual([]);
+
+  fireEvent.click($.getByText('+'));
+  expect(patchList).toEqual([
+    { op: 'replace', path: ['count'], value: 1}
+  ]);
+  expect(inverseList).toEqual([
+    { op: 'replace', path: ['count'], value: 0}
+  ]);
+
+  fireEvent.click($.getByText('+'));
+  fireEvent.click($.getByText('-'));
+  expect(patchList).toEqual([
+    { op: 'replace', path: ['count'], value: 1},
+    { op: 'replace', path: ['count'], value: 2},
+    { op: 'replace', path: ['count'], value: 1},
+  ]);
+  expect(inverseList).toEqual([
+    { op: 'replace', path: ['count'], value: 0},
+    { op: 'replace', path: ['count'], value: 1},
+    { op: 'replace', path: ['count'], value: 2},
+  ]);
 });

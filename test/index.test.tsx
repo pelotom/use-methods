@@ -193,13 +193,12 @@ it('allows lazy initialization', () => {
 });
 
 it('will provide patches', () => {
-
   interface State {
     count: number;
   }
 
   const initialState: State = {
-    count: 0
+    count: 0,
   };
 
   const patchList: any[] = [];
@@ -212,12 +211,12 @@ it('will provide patches', () => {
       },
       decrement() {
         state.count--;
-      }
+      },
     }),
-    patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
+    patchListener: (patches: Patch[], inversePatches: Patch[]) => {
       patchList.push(...patches);
       inverseList.push(...inversePatches);
-    }
+    },
   };
 
   const testId = 'counter-testid';
@@ -239,23 +238,19 @@ it('will provide patches', () => {
   expect(inverseList).toEqual([]);
 
   fireEvent.click($.getByText('+'));
-  expect(patchList).toEqual([
-    { op: 'replace', path: ['count'], value: 1}
-  ]);
-  expect(inverseList).toEqual([
-    { op: 'replace', path: ['count'], value: 0}
-  ]);
+  expect(patchList).toEqual([{ op: 'replace', path: ['count'], value: 1 }]);
+  expect(inverseList).toEqual([{ op: 'replace', path: ['count'], value: 0 }]);
 
   fireEvent.click($.getByText('+'));
   fireEvent.click($.getByText('-'));
   expect(patchList).toEqual([
-    { op: 'replace', path: ['count'], value: 1},
-    { op: 'replace', path: ['count'], value: 2},
-    { op: 'replace', path: ['count'], value: 1},
+    { op: 'replace', path: ['count'], value: 1 },
+    { op: 'replace', path: ['count'], value: 2 },
+    { op: 'replace', path: ['count'], value: 1 },
   ]);
   expect(inverseList).toEqual([
-    { op: 'replace', path: ['count'], value: 0},
-    { op: 'replace', path: ['count'], value: 1},
-    { op: 'replace', path: ['count'], value: 2},
+    { op: 'replace', path: ['count'], value: 0 },
+    { op: 'replace', path: ['count'], value: 1 },
+    { op: 'replace', path: ['count'], value: 2 },
   ]);
 });

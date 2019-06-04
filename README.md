@@ -76,8 +76,8 @@ you can pass an object to `useMethods` that contains the `methods` property and 
 property.  The callback will be fed the patches applied to the state. For example: 
 
 ```ts
-const patchList: any[] = [];
-const inverseList: any[] = [];
+const patchList: Patch[] = [];
+const inverseList: Patch[] = [];
 
 const methodsObject = {
   methods: (state: State) => ({
@@ -91,7 +91,7 @@ const methodsObject = {
   patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
     patchList.push(...patches);
     inverseList.push(...inversePatches);
-  }
+  },
 };
 
 // ... and in the component

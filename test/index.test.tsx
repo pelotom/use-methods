@@ -1,6 +1,6 @@
 import useMethods from '../src';
 import React, { useLayoutEffect, useReducer, useMemo } from 'react';
-import { cleanup, render, fireEvent, RenderResult } from 'react-testing-library';
+import { cleanup, render, fireEvent, RenderResult } from '@testing-library/react';
 import Todos from './Todos';
 import { Patch } from 'immer';
 

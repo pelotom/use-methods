@@ -59,6 +59,8 @@ const methods = state => ({
 });
 ```
 
+*Note: the `methods` factory function must produce the same set of method names on every invocation.*
+
 ### Comparison to `useReducer`
 
 [Here's a more complex example](https://codesandbox.io/s/2109324q3r) involving a list of counters, implemented using `useReducer` and `useMethods` respectively:

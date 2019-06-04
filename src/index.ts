@@ -72,17 +72,15 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
     ];
   }, [methodsOrOptions]);
   const [state, dispatch] = useReducer(reducer, initialState, initializer);
-  const actionTypes: ActionUnion<R>['type'][] = Object.keys(methodsFactory(state));
-  const callbacks = useMemo(
-    () =>
-      actionTypes.reduce(
-        (accum, type) => {
-          accum[type] = (...payload) => dispatch({ type, payload } as ActionUnion<R>);
-          return accum;
-        },
-        {} as CallbacksFor<typeof methodsFactory>,
-      ),
-    actionTypes,
-  );
+  const callbacks = useMemo(() => {
+    const actionTypes: ActionUnion<R>['type'][] = Object.keys(methodsFactory(state));
+    return actionTypes.reduce(
+      (accum, type) => {
+        accum[type] = (...payload) => dispatch({ type, payload } as ActionUnion<R>);
+        return accum;
+      },
+      {} as CallbacksFor<typeof methodsFactory>,
+    );
+  }, []);
   return [state, callbacks];
 }

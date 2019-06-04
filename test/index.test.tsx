@@ -130,17 +130,21 @@ it('allows lazy initialization', () => {
 
   const init = (count: number): State => ({ count });
 
-  const methods = (state: State) => ({
-    increment() {
-      state.count++;
-    },
-    decrement() {
-      state.count--;
-    },
-    reset(newCount: number) {
-      return init(newCount);
-    },
-  });
+  let invocations = 0;
+  const methods = (state: State) => {
+    invocations++;
+    return {
+      increment() {
+        state.count++;
+      },
+      decrement() {
+        state.count--;
+      },
+      reset(newCount: number) {
+        return init(newCount);
+      },
+    };
+  };
 
   interface CounterProps {
     initialCount: number;
@@ -165,30 +169,37 @@ it('allows lazy initialization', () => {
   const expectCount = (count: number) =>
     expect(Number.parseInt($.getByTestId(testId).textContent!, 10)).toBe(count);
 
+  expect(invocations).toBe(1);
   expectCount(0);
 
   fireEvent.click($.getByText('+'));
 
+  expect(invocations).toBe(2);
   expectCount(1);
 
   fireEvent.click($.getByText('+'));
 
+  expect(invocations).toBe(3);
   expectCount(2);
 
   fireEvent.click($.getByText(/reset/i));
 
+  expect(invocations).toBe(4);
   expectCount(0);
 
   fireEvent.click($.getByText('-'));
 
+  expect(invocations).toBe(5);
   expectCount(-1);
 
   $.rerender(<Counter initialCount={3} />);
 
+  expect(invocations).toBe(5);
   expectCount(-1);
 
   fireEvent.click($.getByText(/reset/i));
 
+  expect(invocations).toBe(6);
   expectCount(3);
 });
 

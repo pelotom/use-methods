@@ -1,11 +1,9 @@
 import useMethods from '../src';
 import React, { useMemo, useRef, useEffect } from 'react';
 
-interface TodosProps {
-  initialTodos?: TodoItem[];
-}
+export type Todos = ReturnType<typeof useTodos>;
 
-export default function Todos({ initialTodos = [] }: TodosProps) {
+export default function useTodos(initialTodos: TodoItem[] = []) {
   const initialState: TodosState = {
     nextId: initialTodos.reduce((maxId, nextItem) => Math.max(maxId, nextItem.id), 0) + 1,
     todos: initialTodos,
@@ -24,59 +22,20 @@ export default function Todos({ initialTodos = [] }: TodosProps) {
     }
   }, [todos, filter]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   // track how many times methods change (should never be more than zero)
   const methodChanges = useRef(-1);
   useEffect(() => {
     methodChanges.current++;
   }, [addTodo, toggleTodo, setFilter]);
 
-  return (
-    <>
-      <div>
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            const input = inputRef.current!;
-            if (!input.value.trim()) {
-              return;
-            }
-            addTodo(input.value);
-            input.value = '';
-          }}
-        >
-          <label>
-            What to do: <input ref={inputRef} />
-          </label>
-          <button type="submit">Add Todo</button>
-        </form>
-      </div>
-      <ul>
-        {visibleTodos.map(({ id, text, completed }) => (
-          <li
-            key={id}
-            data-testid="todo-item"
-            onClick={() => toggleTodo(id)}
-            className={completed ? 'complete' : 'incomplete'}
-          >
-            {text}
-          </li>
-        ))}
-      </ul>
-      <div>
-        <span>Show: </span>
-        {visibilityFilters.map(f => (
-          <button key={f} onClick={() => setFilter(f)} disabled={f === filter}>
-            {f}
-          </button>
-        ))}
-      </div>
-      <label>
-        method changes: <span>{methodChanges.current}</span>
-      </label>
-    </>
-  );
+  return {
+    todos: visibleTodos,
+    filter,
+    addTodo,
+    toggleTodo,
+    setFilter,
+    methodChanges,
+  };
 }
 
 interface TodosState {
@@ -85,7 +44,7 @@ interface TodosState {
   filter: VisibilityFilter;
 }
 
-interface TodoItem {
+export interface TodoItem {
   id: number;
   text: string;
   completed: boolean;
@@ -96,6 +55,8 @@ const visibilityFilters: VisibilityFilter[] = ['all', 'completed', 'active'];
 
 const methods = (state: TodosState) => ({
   addTodo(text: string) {
+    if (!text) return;
+
     state.todos.push({
       id: state.nextId++,
       text,

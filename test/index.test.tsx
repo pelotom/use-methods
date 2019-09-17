@@ -1,99 +1,88 @@
-import useMethods from '../src';
-import React, { useLayoutEffect, useReducer, useMemo } from 'react';
-import { cleanup, render, fireEvent, RenderResult } from '@testing-library/react';
-import Todos from './Todos';
+import { HookResult, renderHook, act } from '@testing-library/react-hooks';
 import { Patch } from 'immer';
-
-afterEach(cleanup);
+import useMethods from '../src';
+import useTodos, { Todos } from './useTodos';
 
 describe('todos example', () => {
-  let $: RenderResult;
+  let $: HookResult<Todos>;
 
   afterEach(() => {
     // tests that methods are not recreated on each render
-    const methodChanges = Number.parseInt($.getByLabelText(/method changes/i).textContent!, 10);
-    expect(methodChanges).toBeLessThanOrEqual(0);
+    expect($.current.methodChanges.current).toBeLessThanOrEqual(0);
   });
 
   describe('with no todos initially', () => {
     beforeEach(() => {
-      $ = render(<Todos />);
+      $ = renderHook(useTodos).result;
     });
 
     it('is empty initially', () => {
-      expect(getTodoItems()).toHaveLength(0);
+      expect($.current.todos).toHaveLength(0);
     });
 
     describe('adding a todo', () => {
       it("doesn't work if input is empty", () => {
-        fireEvent.click($.getByText(/add todo/i));
-        expect(getTodoItems()).toHaveLength(0);
+        $.current.addTodo('');
+        expect($.current.todos).toHaveLength(0);
       });
 
       it('adds an incomplete todo with the input text', () => {
         const todoText = 'climb mt everest';
-        fireEvent.change($.getByLabelText(/what to do/i), { target: { value: todoText } });
-        fireEvent.click($.getByText(/add todo/i));
-        const items = getTodoItems();
-        expect(items).toHaveLength(1);
-        const [item] = items;
-        expect(item.textContent).toBe(todoText);
-        expect(getStatus(item)).toBe('incomplete');
+        act(() => $.current.addTodo(todoText));
+        const { todos } = $.current;
+        expect(todos).toHaveLength(1);
+        const [todo] = todos;
+        expect(todo.text).toBe(todoText);
+        expect(todo.completed).toBe(false);
       });
     });
   });
 
   describe('with a single todo initially', () => {
-    let item: HTMLElement;
-
     beforeEach(() => {
-      $ = render(<Todos initialTodos={[{ id: 0, text: 'hello world', completed: false }]} />);
-      const items = getTodoItems();
-      expect(items).toHaveLength(1);
-      [item] = items;
+      $ = renderHook(useTodos, {
+        initialProps: [
+          {
+            id: 0,
+            text: 'hello world',
+            completed: false,
+          },
+        ],
+      }).result;
     });
 
     it('can toggle completeness', () => {
-      expect(getStatus(item)).toBe('incomplete');
-      fireEvent.click(item);
-      expect(getStatus(item)).toBe('complete');
-      fireEvent.click(item);
-      expect(getStatus(item)).toBe('incomplete');
+      const { id } = getTodo();
+      expect(getTodo().completed).toBe(false);
+      act(() => $.current.toggleTodo(id));
+      expect(getTodo().completed).toBe(true);
+      act(() => $.current.toggleTodo(id));
+      expect(getTodo().completed).toBe(false);
+
+      function getTodo() {
+        const { todos } = $.current;
+        expect(todos).toHaveLength(1);
+        return todos[0];
+      }
     });
 
     it('can change filter', () => {
-      fireEvent.click($.getByText('completed'));
-      expect(getTodoItems()).toHaveLength(0);
-      fireEvent.click($.getByText('active'));
-      const items = getTodoItems();
-      expect(items).toHaveLength(1);
-      fireEvent.click(items[0]);
-      expect(getTodoItems()).toHaveLength(0);
-      fireEvent.click($.getByText('completed'));
-      expect(getTodoItems()).toHaveLength(1);
-      fireEvent.click($.getByText('all'));
-      expect(getTodoItems()).toHaveLength(1);
+      act(() => $.current.setFilter('completed'));
+      expect($.current.todos).toHaveLength(0);
+      act(() => $.current.setFilter('active'));
+      expect($.current.todos).toHaveLength(1);
+      act(() => $.current.toggleTodo($.current.todos[0].id));
+      expect($.current.todos).toHaveLength(0);
+      act(() => $.current.setFilter('completed'));
+      expect($.current.todos).toHaveLength(1);
+      act(() => $.current.setFilter('all'));
+      expect($.current.todos).toHaveLength(1);
     });
   });
-
-  function getTodoItems() {
-    return $.queryAllByTestId('todo-item');
-  }
-
-  function getStatus(item: HTMLElement) {
-    return item.classList.value;
-  }
 });
 
 it('avoids invoking methods more than necessary', () => {
-  const buttonText = 'click me!';
-
   let invocations = 0;
-
-  function Test() {
-    const { increment } = useMethods(methods, { count: 0 })[1];
-    return <button onClick={increment}>{buttonText}</button>;
-  }
 
   interface State {
     count: number;
@@ -108,15 +97,15 @@ it('avoids invoking methods more than necessary', () => {
     },
   });
 
-  const button = render(<Test />).getByText(buttonText);
+  const { result } = renderHook(() => useMethods(methods, initialState)[1]);
 
   expect(invocations).toBe(0);
 
-  fireEvent.click(button);
+  act(result.current.increment);
 
   expect(invocations).toBe(1);
 
-  fireEvent.click(button);
+  act(result.current.increment);
 
   expect(invocations).toBe(2);
 });
@@ -146,58 +135,45 @@ it('allows lazy initialization', () => {
     };
   };
 
-  interface CounterProps {
-    initialCount: number;
+  function useCounter(initialCount: number) {
+    const [state, { reset, ...callbacks }] = useMethods(methods, initialCount, init);
+    return { ...state, ...callbacks, reset: () => reset(initialCount) };
   }
+  const { result: $, rerender } = renderHook(useCounter, { initialProps: 0 });
 
-  const testId = 'counter-testid';
+  expect($.current.count);
 
-  function Counter({ initialCount }: CounterProps) {
-    const [state, { increment, decrement, reset }] = useMethods(methods, initialCount, init);
-    return (
-      <>
-        Count: <span data-testid={testId}>{state.count}</span>
-        <button onClick={increment}>+</button>
-        <button onClick={decrement}>-</button>
-        <button onClick={() => reset(initialCount)}>Reset</button>
-      </>
-    );
-  }
-
-  const $ = render(<Counter initialCount={0} />);
-
-  const expectCount = (count: number) =>
-    expect(Number.parseInt($.getByTestId(testId).textContent!, 10)).toBe(count);
+  const expectCount = (count: number) => expect($.current.count).toBe(count);
 
   expect(invocations).toBe(1);
   expectCount(0);
 
-  fireEvent.click($.getByText('+'));
+  act($.current.increment);
 
   expect(invocations).toBe(2);
   expectCount(1);
 
-  fireEvent.click($.getByText('+'));
+  act($.current.increment);
 
   expect(invocations).toBe(3);
   expectCount(2);
 
-  fireEvent.click($.getByText(/reset/i));
+  act($.current.reset);
 
   expect(invocations).toBe(4);
   expectCount(0);
 
-  fireEvent.click($.getByText('-'));
+  act($.current.decrement);
 
   expect(invocations).toBe(5);
   expectCount(-1);
 
-  $.rerender(<Counter initialCount={3} />);
+  rerender(3);
 
   expect(invocations).toBe(5);
   expectCount(-1);
 
-  fireEvent.click($.getByText(/reset/i));
+  act($.current.reset);
 
   expect(invocations).toBe(6);
   expectCount(3);
@@ -230,30 +206,21 @@ it('will provide patches', () => {
     },
   };
 
-  const testId = 'counter-testid';
-
-  function Counter() {
-    const [state, { increment, decrement }] = useMethods(methodsObject, initialState);
-    return (
-      <>
-        Count: <span data-testid={testId}>{state.count}</span>
-        <button onClick={increment}>+</button>
-        <button onClick={decrement}>-</button>
-      </>
-    );
+  function useCounter() {
+    const [state, callbacks] = useMethods(methodsObject, initialState);
+    return { ...state, ...callbacks };
   }
-
-  const $ = render(<Counter />);
+  const { result: $, rerender } = renderHook(useCounter);
 
   expect(patchList).toEqual([]);
   expect(inverseList).toEqual([]);
 
-  fireEvent.click($.getByText('+'));
+  act($.current.increment);
   expect(patchList).toEqual([{ op: 'replace', path: ['count'], value: 1 }]);
   expect(inverseList).toEqual([{ op: 'replace', path: ['count'], value: 0 }]);
 
-  fireEvent.click($.getByText('+'));
-  fireEvent.click($.getByText('-'));
+  act($.current.increment);
+  act($.current.decrement);
   expect(patchList).toEqual([
     { op: 'replace', path: ['count'], value: 1 },
     { op: 'replace', path: ['count'], value: 2 },

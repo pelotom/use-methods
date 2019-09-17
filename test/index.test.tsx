@@ -1,4 +1,4 @@
-import { HookResult, renderHook } from '@testing-library/react-hooks';
+import { HookResult, renderHook, act } from '@testing-library/react-hooks';
 import { Patch } from 'immer';
 import useMethods from '../src';
 import useTodos, { Todos } from './useTodos';
@@ -28,7 +28,7 @@ describe('todos example', () => {
 
       it('adds an incomplete todo with the input text', () => {
         const todoText = 'climb mt everest';
-        $.current.addTodo(todoText);
+        act(() => $.current.addTodo(todoText));
         const { todos } = $.current;
         expect(todos).toHaveLength(1);
         const [todo] = todos;
@@ -54,9 +54,9 @@ describe('todos example', () => {
     it('can toggle completeness', () => {
       const { id } = getTodo();
       expect(getTodo().completed).toBe(false);
-      $.current.toggleTodo(id);
+      act(() => $.current.toggleTodo(id));
       expect(getTodo().completed).toBe(true);
-      $.current.toggleTodo(id);
+      act(() => $.current.toggleTodo(id));
       expect(getTodo().completed).toBe(false);
 
       function getTodo() {
@@ -67,15 +67,15 @@ describe('todos example', () => {
     });
 
     it('can change filter', () => {
-      $.current.setFilter('completed');
+      act(() => $.current.setFilter('completed'));
       expect($.current.todos).toHaveLength(0);
-      $.current.setFilter('active');
+      act(() => $.current.setFilter('active'));
       expect($.current.todos).toHaveLength(1);
-      $.current.toggleTodo($.current.todos[0].id);
+      act(() => $.current.toggleTodo($.current.todos[0].id));
       expect($.current.todos).toHaveLength(0);
-      $.current.setFilter('completed');
+      act(() => $.current.setFilter('completed'));
       expect($.current.todos).toHaveLength(1);
-      $.current.setFilter('all');
+      act(() => $.current.setFilter('all'));
       expect($.current.todos).toHaveLength(1);
     });
   });
@@ -101,11 +101,11 @@ it('avoids invoking methods more than necessary', () => {
 
   expect(invocations).toBe(0);
 
-  result.current.increment();
+  act(result.current.increment);
 
   expect(invocations).toBe(1);
 
-  result.current.increment();
+  act(result.current.increment);
 
   expect(invocations).toBe(2);
 });
@@ -148,22 +148,22 @@ it('allows lazy initialization', () => {
   expect(invocations).toBe(1);
   expectCount(0);
 
-  $.current.increment();
+  act($.current.increment);
 
   expect(invocations).toBe(2);
   expectCount(1);
 
-  $.current.increment();
+  act($.current.increment);
 
   expect(invocations).toBe(3);
   expectCount(2);
 
-  $.current.reset();
+  act($.current.reset);
 
   expect(invocations).toBe(4);
   expectCount(0);
 
-  $.current.decrement();
+  act($.current.decrement);
 
   expect(invocations).toBe(5);
   expectCount(-1);
@@ -173,7 +173,7 @@ it('allows lazy initialization', () => {
   expect(invocations).toBe(5);
   expectCount(-1);
 
-  $.current.reset();
+  act($.current.reset);
 
   expect(invocations).toBe(6);
   expectCount(3);
@@ -215,12 +215,12 @@ it('will provide patches', () => {
   expect(patchList).toEqual([]);
   expect(inverseList).toEqual([]);
 
-  $.current.increment();
+  act($.current.increment);
   expect(patchList).toEqual([{ op: 'replace', path: ['count'], value: 1 }]);
   expect(inverseList).toEqual([{ op: 'replace', path: ['count'], value: 0 }]);
 
-  $.current.increment();
-  $.current.decrement();
+  act($.current.increment);
+  act($.current.decrement);
   expect(patchList).toEqual([
     { op: 'replace', path: ['count'], value: 1 },
     { op: 'replace', path: ['count'], value: 2 },

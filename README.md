@@ -74,7 +74,7 @@ _Which of these would you rather write?_
 `use-methods` is built on [`immer`](https://github.com/mweststrate/immer), which allows you to write your methods in an imperative, mutating style, even though the actual state managed behind the scenes is immutable. You can also return entirely new states from your methods where it's more convenient to do so (as in the `reset` example above).
 
 If you would like to use the [patches](https://github.com/immerjs/immer#patches) functionality from immer,
-you can pass an object to `useMethods` that contains the `methods` property and a `patchCallback`
+you can pass an object to `useMethods` that contains the `methods` property and a `patchListener`
 property.  The callback will be fed the patches applied to the state. For example: 
 
 ```ts
@@ -90,7 +90,7 @@ const methodsObject = {
       state.count--;
     }
   }),
-  patchCallback: (patches: Patch[], inversePatches: Patch[]) => {
+  patchListener: (patches: Patch[], inversePatches: Patch[]) => {
     patchList.push(...patches);
     inverseList.push(...inversePatches);
   },

@@ -1,6 +1,8 @@
 import produce, { PatchListener } from 'immer';
 import { Reducer, useMemo, useReducer } from 'react';
 
+export { isDraft, isDraftable, nothing, original, setAutoFreeze, setUseProxies } from 'immer';
+
 export type StateAndCallbacksFor<M extends MethodsOrOptions> = [StateFor<M>, CallbacksFor<M>];
 
 export type StateFor<M extends MethodsOrOptions> = M extends MethodsOrOptions<infer S, any>

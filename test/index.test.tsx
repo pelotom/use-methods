@@ -1,6 +1,6 @@
 import { HookResult, renderHook, act } from '@testing-library/react-hooks';
 import { Patch } from 'immer';
-import useMethods from '../src';
+import useMethods, { isDraft, isDraftable, nothing, original, setAutoFreeze, setUseProxies } from '../src';
 import useTodos, { Todos } from './useTodos';
 
 describe('todos example', () => {
@@ -79,6 +79,15 @@ describe('todos example', () => {
       expect($.current.todos).toHaveLength(1);
     });
   });
+});
+
+it('exports immer helpers', () => {
+  expect(typeof isDraft).toBe('function');
+  expect(typeof isDraftable).toBe('function');
+  expect(typeof nothing).toBe('symbol');
+  expect(typeof original).toBe('function');
+  expect(typeof setAutoFreeze).toBe('function');
+  expect(typeof setUseProxies).toBe('function');
 });
 
 it('avoids invoking methods more than necessary', () => {

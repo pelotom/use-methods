@@ -1,5 +1,7 @@
-import produce, { PatchListener } from 'immer';
+import produce, { PatchListener, enableAllPlugins } from 'immer';
 import { Reducer, useMemo, useReducer } from 'react';
+
+enableAllPlugins();
 
 export type StateAndCallbacksFor<M extends MethodsOrOptions> = [StateFor<M>, CallbacksFor<M>];
 

@@ -3911,10 +3911,10 @@
   "resolved" "https://registry.npmjs.org/ignore/-/ignore-5.1.4.tgz"
   "version" "5.1.4"
 
-"immer@^5.0.0":
-  "integrity" "sha512-pqWQ6ozVfNOUDjrLfm4Pt7q4Q12cGw2HUZgry4Q5+Myxu9nmHRkWBpI0J4+MK0AxbdFtdMTwEGVl7Vd+vEiK+A=="
-  "resolved" "https://registry.npmjs.org/immer/-/immer-5.3.6.tgz"
-  "version" "5.3.6"
+"immer@^6.0.0":
+  "integrity" "sha512-SyCYnAuiRf67Lvk0VkwFvwtDoEiCMjeamnHvRfnVDyc7re1/rQrNxuL+jJ7lA3WvdC4uznrvbmm+clJ9+XXatg=="
+  "resolved" "https://registry.npmjs.org/immer/-/immer-6.0.9.tgz"
+  "version" "6.0.9"
 
 "import-fresh@^2.0.0":
   "integrity" "sha1-2BNVwVYS04bGH53dOSLUMEgipUY="

@@ -1,5 +1,7 @@
-import produce, { PatchListener } from 'immer';
 import { Reducer, useMemo, useReducer } from 'react';
+import produce, { PatchListener, enableAllPlugins } from 'immer';
+
+enableAllPlugins();
 
 export type StateAndCallbacksFor<M extends MethodsOrOptions> = [StateFor<M>, CallbacksFor<M>];
 
@@ -11,7 +13,7 @@ export type CallbacksFor<M extends MethodsOrOptions> = M extends MethodsOrOption
   ? {
       [T in ActionUnion<R>['type']]: (
         ...payload: ActionByType<ActionUnion<R>, T>['payload']
-      ) => void
+      ) => void;
     }
   : never;
 
@@ -32,7 +34,7 @@ export type MethodRecordBase<S = any> = Record<
 >;
 
 export type ActionUnion<R extends MethodRecordBase> = {
-  [T in keyof R]: { type: T; payload: Parameters<R[T]> }
+  [T in keyof R]: { type: T; payload: Parameters<R[T]> };
 }[keyof R];
 
 export type ActionByType<A, T> = A extends { type: infer T2 } ? (T extends T2 ? A : never) : never;

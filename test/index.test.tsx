@@ -1,33 +1,33 @@
-import { HookResult, renderHook, act } from '@testing-library/react-hooks';
-import { Patch } from 'immer';
-import useMethods from '../src';
-import useTodos, { Todos } from './useTodos';
+import { renderHook, act, RenderHookResult } from "@testing-library/react";
+import { Patch } from "immer";
+import useMethods from "../src";
+import useTodos, { TodoItem, Todos } from "./useTodos";
 
-describe('todos example', () => {
-  let $: HookResult<Todos>;
+describe("todos example", () => {
+  let $: RenderHookResult<Todos, TodoItem[]>["result"];
 
   afterEach(() => {
     // tests that methods are not recreated on each render
     expect($.current.methodChanges.current).toBeLessThanOrEqual(0);
   });
 
-  describe('with no todos initially', () => {
+  describe("with no todos initially", () => {
     beforeEach(() => {
       $ = renderHook(useTodos).result;
     });
 
-    it('is empty initially', () => {
+    it("is empty initially", () => {
       expect($.current.todos).toHaveLength(0);
     });
 
-    describe('adding a todo', () => {
+    describe("adding a todo", () => {
       it("doesn't work if input is empty", () => {
-        $.current.addTodo('');
+        act(() => $.current.addTodo(""));
         expect($.current.todos).toHaveLength(0);
       });
 
-      it('adds an incomplete todo with the input text', () => {
-        const todoText = 'climb mt everest';
+      it("adds an incomplete todo with the input text", () => {
+        const todoText = "climb mt everest";
         act(() => $.current.addTodo(todoText));
         const { todos } = $.current;
         expect(todos).toHaveLength(1);
@@ -38,50 +38,49 @@ describe('todos example', () => {
     });
   });
 
-  describe('with a single todo initially', () => {
+  describe("with a single todo initially", () => {
     beforeEach(() => {
       $ = renderHook(useTodos, {
         initialProps: [
           {
             id: 0,
-            text: 'hello world',
+            text: "hello world",
             completed: false,
           },
         ],
       }).result;
     });
 
-    it('can toggle completeness', () => {
+    it("can toggle completeness", () => {
+      const getTodo = () => {
+        const { todos } = $.current;
+        expect(todos).toHaveLength(1);
+        return todos[0];
+      };
       const { id } = getTodo();
       expect(getTodo().completed).toBe(false);
       act(() => $.current.toggleTodo(id));
       expect(getTodo().completed).toBe(true);
       act(() => $.current.toggleTodo(id));
       expect(getTodo().completed).toBe(false);
-
-      function getTodo() {
-        const { todos } = $.current;
-        expect(todos).toHaveLength(1);
-        return todos[0];
-      }
     });
 
-    it('can change filter', () => {
-      act(() => $.current.setFilter('completed'));
+    it("can change filter", () => {
+      act(() => $.current.setFilter("completed"));
       expect($.current.todos).toHaveLength(0);
-      act(() => $.current.setFilter('active'));
+      act(() => $.current.setFilter("active"));
       expect($.current.todos).toHaveLength(1);
       act(() => $.current.toggleTodo($.current.todos[0].id));
       expect($.current.todos).toHaveLength(0);
-      act(() => $.current.setFilter('completed'));
+      act(() => $.current.setFilter("completed"));
       expect($.current.todos).toHaveLength(1);
-      act(() => $.current.setFilter('all'));
+      act(() => $.current.setFilter("all"));
       expect($.current.todos).toHaveLength(1);
     });
   });
 });
 
-it('avoids invoking methods more than necessary', () => {
+it("avoids invoking methods more than necessary", () => {
   let invocations = 0;
 
   interface State {
@@ -110,7 +109,7 @@ it('avoids invoking methods more than necessary', () => {
   expect(invocations).toBe(2);
 });
 
-it('allows lazy initialization', () => {
+it("allows lazy initialization", () => {
   // Adapted from https://reactjs.org/docs/hooks-reference.html#lazy-initialization
 
   interface State {
@@ -179,7 +178,7 @@ it('allows lazy initialization', () => {
   expectCount(3);
 });
 
-it('will provide patches', () => {
+it("will provide patches", () => {
   interface State {
     count: number;
   }
@@ -216,19 +215,19 @@ it('will provide patches', () => {
   expect(inverseList).toEqual([]);
 
   act($.current.increment);
-  expect(patchList).toEqual([{ op: 'replace', path: ['count'], value: 1 }]);
-  expect(inverseList).toEqual([{ op: 'replace', path: ['count'], value: 0 }]);
+  expect(patchList).toEqual([{ op: "replace", path: ["count"], value: 1 }]);
+  expect(inverseList).toEqual([{ op: "replace", path: ["count"], value: 0 }]);
 
   act($.current.increment);
   act($.current.decrement);
   expect(patchList).toEqual([
-    { op: 'replace', path: ['count'], value: 1 },
-    { op: 'replace', path: ['count'], value: 2 },
-    { op: 'replace', path: ['count'], value: 1 },
+    { op: "replace", path: ["count"], value: 1 },
+    { op: "replace", path: ["count"], value: 2 },
+    { op: "replace", path: ["count"], value: 1 },
   ]);
   expect(inverseList).toEqual([
-    { op: 'replace', path: ['count'], value: 0 },
-    { op: 'replace', path: ['count'], value: 1 },
-    { op: 'replace', path: ['count'], value: 2 },
+    { op: "replace", path: ["count"], value: 0 },
+    { op: "replace", path: ["count"], value: 1 },
+    { op: "replace", path: ["count"], value: 2 },
   ]);
 });

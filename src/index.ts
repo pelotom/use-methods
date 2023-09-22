@@ -1,17 +1,17 @@
-import produce, { PatchListener } from 'immer';
-import { Reducer, useMemo, useReducer } from 'react';
+import { produce, enablePatches, PatchListener } from "immer";
+import { Reducer, useMemo, useReducer } from "react";
+
+enablePatches();
 
 export type StateAndCallbacksFor<M extends MethodsOrOptions> = [StateFor<M>, CallbacksFor<M>];
 
-export type StateFor<M extends MethodsOrOptions> = M extends MethodsOrOptions<infer S, any>
-  ? S
-  : never;
+export type StateFor<M extends MethodsOrOptions> = M extends MethodsOrOptions<infer S> ? S : never;
 
 export type CallbacksFor<M extends MethodsOrOptions> = M extends MethodsOrOptions<any, infer R>
   ? {
-      [T in ActionUnion<R>['type']]: (
-        ...payload: ActionByType<ActionUnion<R>, T>['payload']
-      ) => void
+      [T in ActionUnion<R>["type"]]: (
+        ...payload: ActionByType<ActionUnion<R>, T>["payload"]
+      ) => void;
     }
   : never;
 
@@ -32,7 +32,7 @@ export type MethodRecordBase<S = any> = Record<
 >;
 
 export type ActionUnion<R extends MethodRecordBase> = {
-  [T in keyof R]: { type: T; payload: Parameters<R[T]> }
+  [T in keyof R]: { type: T; payload: Parameters<R[T]> };
 }[keyof R];
 
 export type ActionByType<A, T> = A extends { type: infer T2 } ? (T extends T2 ? A : never) : never;
@@ -54,7 +54,7 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
   const [reducer, methodsFactory] = useMemo<[Reducer<S, ActionUnion<R>>, Methods<S, R>]>(() => {
     let methods: Methods<S, R>;
     let patchListener: PatchListener | undefined;
-    if (typeof methodsOrOptions === 'function') {
+    if (typeof methodsOrOptions === "function") {
       methods = methodsOrOptions;
     } else {
       methods = methodsOrOptions.methods;
@@ -62,7 +62,7 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
     }
     return [
       (state: S, action: ActionUnion<R>) => {
-        return (produce as any)(
+        return produce(
           state,
           (draft: S) => methods(draft)[action.type](...action.payload),
           patchListener,
@@ -73,7 +73,7 @@ export default function useMethods<S, R extends MethodRecordBase<S>>(
   }, [methodsOrOptions]);
   const [state, dispatch] = useReducer(reducer, initialState, initializer);
   const callbacks = useMemo(() => {
-    const actionTypes: ActionUnion<R>['type'][] = Object.keys(methodsFactory(state));
+    const actionTypes: ActionUnion<R>["type"][] = Object.keys(methodsFactory(state));
     return actionTypes.reduce(
       (accum, type) => {
         accum[type] = (...payload) => dispatch({ type, payload } as ActionUnion<R>);
